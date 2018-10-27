@@ -1,0 +1,52 @@
+- name: install essential packages
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  loop:
+    - python3-pip
+    - python3-venv
+    - build-essential
+    - libssl-dev
+    - git
+
+- name: create group - "{{ service_user }}"
+  group:
+    name: "{{ service_user }}"
+    system: yes
+
+- name: create service user - "{{ service_user }}"
+  user:
+    name: "{{ service_user }}"
+    group: "{{ service_user }}"
+    create_home: yes
+    home: "{{ server_path }}"
+    system: yes
+
+- name: clone ctfd repository
+  git:
+    repo: "{{ ctfd_repo }}"
+    dest: "{{ server_app_path }}"
+    version: "{{ ctfd_version }}"
+    update: no
+
+- name: create venv with upgraded pip
+  pip:
+    name: pip==18.1
+    chdir: "{{ venv_path }}"
+    virtualenv: "{{ venv_name }}"
+    virtualenv_command: '/usr/bin/python3 -m venv'
+
+- name: install requirements
+  pip:
+    chdir: "{{ venv_path }}"
+    virtualenv: "{{ venv_name }}"
+    virtualenv_python: python3
+    requirements: "{{ server_app_path }}/requirements.txt"
+
+- name: install uwsgi
+  pip:
+    chdir: "{{ venv_path }}"
+    virtualenv: "{{ venv_name }}"
+    virtualenv_python: python3
+    name: uwsgi==2.0.17.1
