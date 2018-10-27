@@ -1,0 +1,13 @@
+[Unit]
+Description=uWSGI instance to serve ctfd server
+After=network.target
+
+[Service]
+User={{ service_user }}
+Group=www-data
+WorkingDirectory={{ server_app_path }}
+Environment="PATH={{ venv_path }}/{{ venv_name }}/bin"
+ExecStart={{ venv_path }}/{{ venv_name }}/binu/wsgi --ini {{ uwsgi_config_path }}
+
+[Install]
+WantedBy=multi-user.target

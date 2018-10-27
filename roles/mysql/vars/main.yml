@@ -1,0 +1,3 @@
+---
+database: "{{ sql_database }}"
+database_user: "{{ sql_database_user }}"

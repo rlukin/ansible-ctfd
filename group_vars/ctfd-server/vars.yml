@@ -1,0 +1,20 @@
+---
+service_user: ctfd
+server_path: "/opt/{{ service_user }}"
+server_app_path: "{{ server_path }}/app"
+
+venv_path: "{{ server_path }}"
+venv_name: ".ctfd_venv"
+
+sql_database: ctfd
+sql_database_user: ctfd
+sql_database_pass: "{{ lookup('password', 'credentials/'
+                                           + 'mysql.'
+                                           + database_user
+                                           + ' chars=ascii_letters,digits') }}"
+
+cache_database: ctfd
+cache_database_user: ctfd
+cache_database_pass: "{{ lookup('password', 'credentials/'
+                                             + 'redis'
+                                             + ' chars=ascii_letters,digits length=100') }}"

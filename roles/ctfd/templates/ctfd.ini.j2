@@ -1,0 +1,11 @@
+[uwsgi]
+module = wsgi:CTFd:create_app()
+
+master = true
+processes = 2
+
+socket = {{ wsgi_socket }}
+chmod-socket = 660
+vacuum = true
+
+die-on-term = true

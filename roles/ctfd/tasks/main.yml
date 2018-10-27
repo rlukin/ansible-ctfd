@@ -1,3 +1,4 @@
+---
 - name: install essential packages
   apt:
     name: "{{ item }}"
@@ -8,6 +9,7 @@
     - python3-venv
     - build-essential
     - libssl-dev
+    - libffi-dev
     - git
 
 - name: create group - "{{ service_user }}"
@@ -50,3 +52,19 @@
     virtualenv: "{{ venv_name }}"
     virtualenv_python: python3
     name: uwsgi==2.0.17.1
+
+- name: copy uwsgi config
+  template:
+    src: ctfd.ini.j2
+    dest: "{{ uwsgi_config_path }}"
+
+- name: copy systemd unit file
+  template:
+    src: ctfd-server.service.j2
+    dest: /etc/systemd/system/ctfd-server.service
+
+- name: start ctfd server
+  service:
+    name: ctfd-server
+    state: started
+    enabled: yes

@@ -1,9 +1,14 @@
-- hosts: server
+- hosts: ctfd-server
   become: true
   user: root
   roles:
-    - ctfd
-#    - mysql
-#    - redis
+    - name: mysql
+      tags: mysql
+
+    - name: ctfd
+      tags: ctfd
+
+    - name: redis
+      tags: redis
 #    - uwsgi
 #    - nginx
