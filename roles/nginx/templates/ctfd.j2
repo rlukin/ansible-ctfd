@@ -1,0 +1,40 @@
+# {{ ansible_managed }}
+{% if ssl_enabled %}
+
+server {
+    listen 80;
+    server_name {{ ansible_facts["eth0"]["ipv4"]["address"] }} {{ domain }} www.{{ domain }};
+
+    return 301 https://{{ domain }}$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name {{ domain }} www.{{ domain }};
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:{{ wsgi_socket }};
+    }
+}
+
+{% else %}
+
+server {
+    listen 80;
+    server_name {{ ansible_facts["eth0"]["ipv4"]["address"] }};
+
+    return 301 $scheme://{{ domain }}$request_uri;
+}
+
+server {
+    listen 80;
+    server_name {{ domain }} www.{{ domain }};
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:{{ wsgi_socket }};
+    }
+}
+
+{% endif %}

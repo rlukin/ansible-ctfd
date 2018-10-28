@@ -1,7 +1,14 @@
 ---
+domain: score.rlukin.ru
+email: me@rlukin.ru
+
+wsgi_socket: "{{ server_path }}/ctfd-server.sock"
+
 service_user: ctfd
 server_path: "/opt/{{ service_user }}"
 server_app_path: "{{ server_path }}/app"
+
+enviroment_file_path: "{{ server_app_path }}/env"
 
 venv_path: "{{ server_path }}"
 venv_name: ".ctfd_venv"
@@ -9,7 +16,7 @@ venv_name: ".ctfd_venv"
 sql_database: ctfd
 sql_database_user: ctfd
 sql_database_pass: "{{ lookup('password', 'credentials/'
-                                           + 'mysql.'
+                                           + 'postresql.'
                                            + database_user
                                            + ' chars=ascii_letters,digits') }}"
 

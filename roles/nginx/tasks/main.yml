@@ -1,0 +1,44 @@
+---
+- name: install nginx server
+  apt:
+   name: nginx
+   state: present
+   update_cache: yes
+
+- name: copy config file
+  template:
+    src: ctfd.j2
+    dest: /etc/nginx/sites-available/{{ domain }}
+
+- name: create symlink to sites-enabled
+  file:
+    src: /etc/nginx/sites-available/{{ domain }}
+    path: /etc/nginx/sites-enabled/{{ domain }}
+    state: link
+
+- name: remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: add certbot repo
+  apt_repository:
+    repo: ppa:certbot/certbot
+    state: present
+  when: ssl_enabled
+
+- name: install certbot
+  apt:
+    name: python-certbot-nginx
+    state: present
+  when: ssl_enabled
+
+- name: generate and install ssl sert
+  command: "certbot --nginx -d {{ domain }} -d www.{{ domain }} --email {{ email }} --agree-tos --non-interactive"
+  when: ssl_enabled
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: yes

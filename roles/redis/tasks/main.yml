@@ -9,6 +9,9 @@
   template:
     src: redis.conf.j2
     dest: /etc/redis/redis.conf
+    owner: redis
+    group: root
+    mode: 0600
 
 - name: restart redis server
   service:

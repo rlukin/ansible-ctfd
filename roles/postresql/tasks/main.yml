@@ -1,0 +1,28 @@
+---
+- name: install required packages
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    state: present
+  loop:
+    - postgresql-9.5
+    - libpq-dev
+    - python3-pip
+
+- name: install psycopg2
+  pip:
+    name: psycopg2==2.7.5
+    state: present
+
+- name: create database "{{ database }}"
+  become_user: postgres
+  postgresql_db:
+    name: "{{ database }}"
+
+- name: create database user "{{ database_user }}"
+  become_user: postgres
+  postgresql_user:
+    db: "{{ database }}"
+    name: "{{ database_user }}"
+    password: "{{ sql_database_pass }}"
+    priv: ALL

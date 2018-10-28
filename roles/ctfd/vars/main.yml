@@ -1,7 +1,6 @@
 ---
 ctfd_repo: https://github.com/CTFd/CTFd
-ctfd_version: 2.0.0
+ctfd_version: 1.2.0
 
-wsgi_socket:  {{ server_path }}/ctfd-server.sock
-uwsgi_config_path: {{ server_app_path }}/ctfd.ini
+uwsgi_config_path: "{{ server_app_path }}/ctfd.ini"
 

@@ -5,9 +5,10 @@ Ansible playbook for deploying [CTFd](https://github.com/CTFd/CTFd)
 * Change ```inventory``` file
 * Give it a shot with:
 ```bash
-ansible-playbook -i inventory site.yml
+ansible-playbook -i inventory -e enable_ssl=true site.yml 
 ```
-
+### SSL
+Don't forget to point your A records to server ip
 ### Notes
 Was deployed on top of:
 ```bash
